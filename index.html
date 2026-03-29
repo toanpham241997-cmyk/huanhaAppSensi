@@ -374,7 +374,6 @@
       background:var(--white);border-radius:22px;
       box-shadow:0 12px 50px rgba(0,0,0,.15),0 2px 8px rgba(0,0,0,.06);
       border:1.5px solid var(--border);overflow:hidden;
-      /* transition only transform+opacity, NOT width */
       transition:transform .42s cubic-bezier(.34,1.4,.64,1), opacity .3s;
       opacity:0;pointer-events:none;
     }
@@ -383,11 +382,9 @@
       opacity:1;pointer-events:auto;
     }
 
-    /* Top progress bar — NO transition by default, JS controls it */
     #nmBar{
       height:4px;width:0%;
       border-radius:22px 22px 0 0;
-      /* Transition set/cleared by JS so reflow is guaranteed */
     }
     .nmb-blue {background:linear-gradient(90deg,var(--blue),var(--blue3),#90caf9);}
     .nmb-green{background:linear-gradient(90deg,#2e7d32,#43a047,#81c784);}
@@ -421,7 +418,6 @@
     .nm-title{font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .nm-sub{font-size:.76rem;color:var(--text3);margin-top:2px;line-height:1.35;}
 
-    /* Animated dots — always in DOM, shown/hidden via display */
     .nm-dots{display:flex;gap:4px;margin-top:6px;}
     .nm-dot{width:5px;height:5px;border-radius:50%;background:var(--blue3);animation:dotAnim 1.2s ease-in-out infinite;}
     .nm-dot:nth-child(2){animation-delay:.2s;}
@@ -462,6 +458,134 @@
     ::-webkit-scrollbar{width:4px;}
     ::-webkit-scrollbar-track{background:var(--bg);}
     ::-webkit-scrollbar-thumb{background:var(--bmid);border-radius:10px;}
+
+    /* ════════════════════════════════
+       KEY AUTH MODAL
+    ════════════════════════════════ */
+    #authOverlay{
+      position:fixed;inset:0;z-index:999998;
+      background:rgba(13,27,62,.72);
+      backdrop-filter:blur(10px);
+      display:flex;align-items:flex-start;justify-content:center;
+      padding-top:0;
+    }
+    #authOverlay.hidden{display:none;}
+
+    #authModal{
+      width:calc(100% - 32px);max-width:420px;
+      background:#fff;border-radius:0 0 32px 32px;
+      box-shadow:0 24px 72px rgba(13,27,62,.35),0 4px 16px rgba(13,27,62,.15);
+      overflow:hidden;
+      transform:translateY(-110%);
+      transition:transform .52s cubic-bezier(.34,1.3,.64,1);
+      position:relative;
+    }
+    #authModal.drop{transform:translateY(0);}
+
+    .am-header{
+      background:linear-gradient(145deg,#7f0000 0%,#c62828 40%,#e53935 70%,#ff6b6b 100%);
+      padding:32px 24px 26px;position:relative;overflow:hidden;
+    }
+    .am-hc{position:absolute;border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none;}
+    .am-hc1{width:200px;height:200px;top:-80px;left:-60px;}
+    .am-hc2{width:140px;height:140px;top:-50px;right:-30px;}
+    .am-hc3{width:90px;height:90px;bottom:-30px;left:40%;}
+
+    .am-icon-wrap{display:flex;justify-content:center;margin-bottom:14px;position:relative;z-index:2;}
+    .am-icon-outer{
+      width:72px;height:72px;border-radius:50%;
+      background:rgba(255,255,255,.18);
+      display:flex;align-items:center;justify-content:center;
+      animation:logoPulse 3s ease-in-out infinite;
+    }
+    .am-icon-inner{
+      width:58px;height:58px;border-radius:50%;
+      background:rgba(255,255,255,.25);
+      border:2px solid rgba(255,255,255,.5);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.6rem;color:#fff;
+    }
+    .am-title-block{text-align:center;position:relative;z-index:2;}
+    .am-title{font-family:'Poppins',sans-serif;font-size:1.35rem;font-weight:900;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.2);}
+    .am-sub{font-size:.78rem;color:rgba(255,255,255,.75);margin-top:4px;letter-spacing:.5px;}
+
+    .am-body{padding:24px 22px 28px;}
+
+    .am-field-label{font-size:.78rem;font-weight:700;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+    .am-input-wrap{position:relative;margin-bottom:16px;}
+    .am-input{
+      width:100%;padding:14px 48px 14px 18px;
+      border-radius:14px;border:2px solid var(--border);
+      background:#f8faff;font-family:'Poppins',sans-serif;
+      font-size:.95rem;font-weight:600;color:var(--text);
+      outline:none;transition:border .2s,box-shadow .2s,background .2s;
+      letter-spacing:1px;
+    }
+    .am-input:focus{border-color:var(--blue3);background:#fff;box-shadow:0 0 0 4px rgba(33,150,243,.12);}
+    .am-input.error{border-color:var(--red2);background:#fff8f8;box-shadow:0 0 0 4px rgba(229,57,53,.1);}
+    .am-eye{
+      position:absolute;right:14px;top:50%;transform:translateY(-50%);
+      background:none;border:none;cursor:pointer;
+      color:var(--text3);font-size:.95rem;padding:4px;
+      transition:color .2s;
+    }
+    .am-eye:hover{color:var(--blue2);}
+
+    .am-error-msg{
+      display:none;align-items:center;gap:6px;
+      background:#ffebee;border:1px solid #ffcdd2;border-radius:10px;
+      padding:9px 13px;margin-bottom:14px;
+      font-size:.78rem;font-weight:700;color:var(--red2);
+    }
+    .am-error-msg.show{display:flex;}
+
+    .am-btn-login{
+      width:100%;padding:15px;border-radius:14px;border:none;
+      background:linear-gradient(135deg,#7f0000,#c62828,#e53935,#ff6b6b);
+      background-size:200% 200%;animation:borderAnim 3s linear infinite;
+      color:#fff;font-family:'Poppins',sans-serif;font-size:1rem;font-weight:900;
+      letter-spacing:1.5px;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      box-shadow:0 6px 24px rgba(198,40,40,.38);
+      transition:all .25s;position:relative;overflow:hidden;
+      margin-bottom:18px;
+    }
+    .am-btn-login::before{content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:bShine 2s infinite;}
+    .am-btn-login:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(198,40,40,.5);}
+    .am-btn-login:active{transform:scale(.97);}
+    .am-btn-login:disabled{opacity:.65;cursor:not-allowed;transform:none;}
+    .am-btn-spin{animation:nmSpin .8s linear infinite;display:none;}
+    .am-btn-login.loading .am-btn-txt{display:none;}
+    .am-btn-login.loading .am-btn-spin{display:inline-block;}
+
+    .am-divider{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+    .am-divider-line{flex:1;height:1px;background:var(--border);}
+    .am-divider-txt{font-size:.7rem;font-weight:700;color:var(--text3);letter-spacing:1px;}
+
+    .am-free-key{
+      width:100%;padding:13px 16px;border-radius:14px;
+      border:2px solid var(--border);background:#f8faff;
+      display:flex;align-items:center;gap:10px;
+      cursor:pointer;transition:all .22s;position:relative;overflow:hidden;
+    }
+    .am-free-key:hover{border-color:var(--blue3);background:#eef6ff;box-shadow:var(--sh1);}
+    .am-free-key-icon{
+      width:36px;height:36px;border-radius:10px;
+      background:linear-gradient(135deg,var(--blight),var(--bmid));
+      display:flex;align-items:center;justify-content:center;
+      color:var(--blue2);font-size:.9rem;flex-shrink:0;
+    }
+    .am-free-key-texts{flex:1;text-align:left;}
+    .am-free-key-title{font-size:.82rem;font-weight:800;color:var(--text2);}
+    .am-free-key-sub{font-size:.7rem;color:var(--text3);margin-top:1px;}
+    .am-copy-icon{
+      width:32px;height:32px;border-radius:9px;
+      background:var(--blue2);color:#fff;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.8rem;flex-shrink:0;transition:background .2s,transform .2s;
+    }
+    .am-free-key:hover .am-copy-icon{background:var(--blue);transform:scale(1.1);}
+    .am-copy-icon.copied{background:var(--green2);}
   </style>
 </head>
 <body>
@@ -473,29 +597,91 @@
 <div class="orb orb4"></div>
 
 <!-- ══════════════════════════════════
+     KEY AUTH OVERLAY
+══════════════════════════════════ -->
+<div id="authOverlay">
+  <div id="authModal">
+    <div class="am-header">
+      <div class="am-hc am-hc1"></div>
+      <div class="am-hc am-hc2"></div>
+      <div class="am-hc am-hc3"></div>
+      <div class="am-icon-wrap">
+        <div class="am-icon-outer">
+          <div class="am-icon-inner">
+            <i class="fa-solid fa-key"></i>
+          </div>
+        </div>
+      </div>
+      <div class="am-title-block">
+        <div class="am-title">NHẬP KEY KÍCH HOẠT</div>
+        <div class="am-sub"><i class="fa-solid fa-shield-halved" style="margin-right:4px;"></i>FF SENSI PRO — Xác thực an toàn</div>
+      </div>
+    </div>
+
+    <div class="am-body">
+      <div class="am-field-label">
+        <i class="fa-solid fa-key" style="color:var(--blue3);"></i>
+        Key kích hoạt
+      </div>
+
+      <div class="am-input-wrap">
+        <input type="password" id="keyInput" class="am-input" placeholder="Nhập key của bạn..." autocomplete="off" spellcheck="false" />
+        <button class="am-eye" id="eyeBtn" onclick="toggleKeyVisible()" tabindex="-1">
+          <i class="fa-solid fa-eye" id="eyeIcon"></i>
+        </button>
+      </div>
+
+      <div class="am-error-msg" id="authError">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span id="authErrorTxt">Key không hợp lệ!</span>
+      </div>
+
+      <button class="am-btn-login" id="loginBtn" onclick="doLogin()">
+        <span class="am-btn-txt"><i class="fa-solid fa-unlock-keyhole" style="margin-right:6px;"></i>ĐĂNG NHẬP</span>
+        <i class="fa-solid fa-circle-notch am-btn-spin"></i>
+      </button>
+
+      <div class="am-divider">
+        <div class="am-divider-line"></div>
+        <div class="am-divider-txt">LẤY KEY MIỄN PHÍ</div>
+        <div class="am-divider-line"></div>
+      </div>
+
+      <button class="am-free-key" id="freeKeyBtn" onclick="copyFreeKeyLink()">
+        <div class="am-free-key-icon">
+          <i class="fa-solid fa-link"></i>
+        </div>
+        <div class="am-free-key-texts">
+          <div class="am-free-key-title">Lấy Key Miễn Phí</div>
+          <div class="am-free-key-sub" id="freeKeySubTxt">Nhấn để sao chép link lấy key</div>
+        </div>
+        <div class="am-copy-icon" id="copyIcon">
+          <i class="fa-solid fa-copy" id="copyIconFA"></i>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
      NOTIFICATION MODAL  (fixed DOM)
 ══════════════════════════════════ -->
 <div id="notifModal" role="alert" aria-live="assertive">
-  <!-- progress bar — no inline transition, JS controls -->
   <div id="nmBar"></div>
   <div class="nm-body">
-    <!-- icon circle -->
     <div class="nm-ic loading" id="nmIc">
       <div class="nm-ring" id="nmRing"></div>
       <i class="fa-solid fa-gear nm-spin" id="nmIcon"></i>
     </div>
-    <!-- texts -->
     <div class="nm-texts">
       <div class="nm-title" id="nmTitle">Đang xử lý...</div>
       <div class="nm-sub"  id="nmSub">Vui lòng chờ</div>
-      <!-- dots: always in DOM, just show/hide -->
       <div class="nm-dots" id="nmDots">
         <div class="nm-dot"></div>
         <div class="nm-dot"></div>
         <div class="nm-dot"></div>
       </div>
     </div>
-    <!-- close -->
     <button class="nm-close" onclick="NM.close()" aria-label="Đóng">
       <i class="fa-solid fa-xmark"></i>
     </button>
@@ -851,6 +1037,97 @@
 
 </div>
 
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+  /* ════════════════════════════════════════════════════════
+     FIREBASE CONFIG — THAY BẰNG CONFIG CỦA BẠN
+  ════════════════════════════════════════════════════════ */
+  const firebaseConfig = {
+    apiKey: "AIzaSyAZVjQyyl7UQ9F2lN6fUi72ugSiMglfnt8",
+  authDomain: "appsuper-6b302.firebaseapp.com",
+  databaseURL: "https://appsuper-6b302-default-rtdb.firebaseio.com",
+  projectId: "appsuper-6b302",
+  storageBucket: "appsuper-6b302.firebasestorage.app",
+  messagingSenderId: "403345415006",
+  appId: "1:403345415006:web:f69b2b5e97ef0766cc0dcf"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+
+  /* ════════════════════════════════════════════════════════
+     EXPOSE DB TO GLOBAL (dùng cho doLogin)
+  ════════════════════════════════════════════════════════ */
+  window._fbDb  = db;
+  window._fbRef = ref;
+  window._fbGet = get;
+
+  /* ════════════════════════════════════════════════════════
+     LẤY LINK FREE KEY TỪ FIREBASE
+  ════════════════════════════════════════════════════════ */
+  async function loadFreeKeyLink() {
+    try {
+      const snap = await get(ref(db, 'config/freeKeyLink'));
+      if (snap.exists()) {
+        window._freeKeyLink = snap.val();
+        const sub = document.getElementById('freeKeySubTxt');
+        if (sub) sub.textContent = 'Nhấn để sao chép link lấy key';
+      }
+    } catch(e) {
+      /* silent fallback */
+    }
+  }
+  loadFreeKeyLink();
+
+  /* ════════════════════════════════════════════════════════
+     AUTO-CHECK KEY ĐÃ LƯU
+  ════════════════════════════════════════════════════════ */
+  async function autoCheckSavedKey() {
+    const saved = localStorage.getItem('ff_key');
+    if (!saved) {
+      showAuthModal();
+      return;
+    }
+    try {
+      const snap = await get(ref(db, 'keys/' + btoa(saved).replace(/[^a-zA-Z0-9]/g,'_')));
+      if (!snap.exists()) {
+        localStorage.removeItem('ff_key');
+        showAuthModal('Key không còn tồn tại. Vui lòng nhập lại!');
+        return;
+      }
+      const data = snap.val();
+      const now  = Date.now();
+
+      if (data.locked) {
+        localStorage.removeItem('ff_key');
+        showAuthModal('Key đã bị khoá bởi admin!');
+        return;
+      }
+      if (data.expiry && data.expiry < now) {
+        localStorage.removeItem('ff_key');
+        showAuthModal('Key đã hết hạn!');
+        return;
+      }
+
+      /* Key hợp lệ — ẩn modal */
+      unlockApp();
+    } catch(e) {
+      /* Nếu lỗi mạng — vẫn cho qua nếu đã lưu key */
+      unlockApp();
+    }
+  }
+
+  window._autoCheckSavedKey = autoCheckSavedKey;
+
+  /* Chạy sau khi DOM sẵn sàng */
+  document.addEventListener('DOMContentLoaded', () => {
+    autoCheckSavedKey();
+  });
+</script>
+
 <script>
 /* ════════════════════════════════════════════════════════
    CANVAS BACKGROUND — animated dot network
@@ -930,24 +1207,15 @@ function updateSlider(input, key, min, max) {
   if (valEl) {
     valEl.textContent = val;
     valEl.classList.remove('pop');
-    void valEl.offsetWidth;          /* force reflow to restart animation */
+    void valEl.offsetWidth;
     valEl.classList.add('pop');
   }
 }
 
 /* ════════════════════════════════════════════════════════
    NOTIFICATION MODAL — FULLY FIXED
-   ─────────────────────────────────────────────────────
-   Root causes fixed:
-   1. nmSub used innerHTML to inject #nmDots → duplicated IDs
-      FIX: nmSub uses textContent, dots live as sibling element
-   2. notifFlow setTimeout not tracked → old callback fires on new modal
-      FIX: NM._flowTimer cancels any pending callback before each new call
-   3. topbar transition not properly reset → bar stays 100% or mis-animates
-      FIX: remove transition → force reflow via void offsetWidth → restore
 ════════════════════════════════════════════════════════ */
 const NM = (() => {
-  /* DOM refs — cached once, never replaced */
   const modal  = document.getElementById('notifModal');
   const bar    = document.getElementById('nmBar');
   const ic     = document.getElementById('nmIc');
@@ -957,50 +1225,38 @@ const NM = (() => {
   const sub    = document.getElementById('nmSub');
   const dots   = document.getElementById('nmDots');
 
-  let _hideTimer = null;   /* autoHide timeout */
-  let _flowTimer = null;   /* notifFlow delayed-success/error timeout */
-  let _barTimer  = null;   /* bar animation frame handle */
+  let _hideTimer = null;
+  let _flowTimer = null;
+  let _barTimer  = null;
 
   function _resetBar(colorClass) {
-    /* 1. Kill any running bar animation */
     cancelAnimationFrame(_barTimer);
-
-    /* 2. Remove transition → instant reset to 0 */
     bar.style.transition = 'none';
     bar.className = colorClass;
     bar.style.width = '0%';
-
-    /* 3. Force reflow so browser registers the 0% state */
     void bar.offsetWidth;
-
-    /* 4. Now add transition and animate to 100% */
     bar.style.transition = 'width 1.8s ease';
     bar.style.width = '100%';
   }
 
   function show({ type, titleText, subText, showDots, autoHide }) {
-    /* Cancel any pending timers from previous calls */
     clearTimeout(_hideTimer);
-    clearTimeout(_flowTimer);   /* ← KEY FIX: cancel old flow callback */
+    if (_flowTimer) { clearTimeout(_flowTimer); _flowTimer = null; }
 
-    /* Update title & sub using textContent — NO innerHTML */
     title.textContent = titleText || '';
     sub.textContent   = subText   || '';
-
-    /* Dots: show/hide via display — element stays in DOM */
     dots.style.display = showDots ? 'flex' : 'none';
 
-    /* Icon + ring + color */
-    switch (type) {
+    switch(type) {
       case 'loading':
         ic.className   = 'nm-ic loading';
-        ring.className = 'nm-ring';          /* spinner visible */
+        ring.className = 'nm-ring';
         icon.className = 'fa-solid fa-gear nm-spin';
         _resetBar('nmb-blue');
         break;
       case 'success':
         ic.className   = 'nm-ic success';
-        ring.className = 'nm-ring gone';     /* spinner hidden */
+        ring.className = 'nm-ring gone';
         icon.className = 'fa-solid fa-circle-check nm-pop';
         _resetBar('nmb-green');
         break;
@@ -1018,10 +1274,8 @@ const NM = (() => {
         break;
     }
 
-    /* Show modal */
     modal.classList.add('show');
 
-    /* Auto-hide */
     if (autoHide) {
       _hideTimer = setTimeout(NM.close, autoHide);
     }
@@ -1030,29 +1284,23 @@ const NM = (() => {
   function close() {
     clearTimeout(_hideTimer);
     modal.classList.remove('show');
-    /* Instantly clear bar after hide */
     setTimeout(() => {
       bar.style.transition = 'none';
       bar.style.width = '0%';
     }, 440);
   }
 
-  /* Loading → then success/error after delay */
   function flow({ loadTitle, loadSub, okTitle, okSub, errTitle, errSub, delayMs }) {
-    /* Show loading immediately */
     show({ type: 'loading', titleText: loadTitle, subText: loadSub, showDots: true });
 
-    /* Schedule success transition — store handle so it can be cancelled */
     _flowTimer = setTimeout(() => {
       _flowTimer = null;
       show({ type: 'success', titleText: okTitle, subText: okSub, showDots: false, autoHide: 2800 });
     }, delayMs || 1300);
 
-    /* Expose _flowTimer so show() can clear it on next call */
     NM._flowTimer = _flowTimer;
   }
 
-  /* Patch: keep _flowTimer in sync with NM object */
   const _origFlow = flow;
 
   return { show, close, flow: _origFlow, get _flowTimer() { return _flowTimer; }, set _flowTimer(v) { _flowTimer = v; } };
@@ -1097,18 +1345,12 @@ function applyButtonSize() {
 
 /* ════════════════════════════════════════════════════════
    LAUNCH FREE FIRE
-   Android : intent:// deep link (Chrome handles it)
-   iOS     : garenaff:// URL scheme via hidden iframe
-   Detection: visibilitychange — hidden = app opened ✓
-              timeout 3s no change = not installed ✗
 ════════════════════════════════════════════════════════ */
-/* Track active launch so multiple rapid clicks don't stack */
 let _launchActive = false;
-let _launchVis    = null;   /* bound visibilitychange handler */
-let _launchFail   = null;   /* fail timeout */
+let _launchVis    = null;
+let _launchFail   = null;
 
 function launchGame(platform) {
-  /* Detect OS */
   let os = platform;
   if (os === 'auto') {
     const ua = navigator.userAgent || '';
@@ -1120,7 +1362,6 @@ function launchGame(platform) {
   const isAndroid = os === 'android';
   const osName    = isAndroid ? 'Android' : 'iOS';
 
-  /* Remove any previous visibilitychange listener */
   if (_launchVis) {
     document.removeEventListener('visibilitychange', _launchVis);
     _launchVis = null;
@@ -1128,7 +1369,6 @@ function launchGame(platform) {
   clearTimeout(_launchFail);
   _launchActive = false;
 
-  /* Show loading modal */
   NM.show({
     type:      'loading',
     titleText: `Đang kiểm tra ${osName}...`,
@@ -1136,18 +1376,15 @@ function launchGame(platform) {
     showDots:  true,
   });
 
-  /* ─── visibilitychange detection ─── */
   function onVisChange() {
     if (_launchActive) return;
 
     if (document.hidden) {
-      /* Page hidden → app launched successfully */
       _launchActive = true;
       clearTimeout(_launchFail);
       document.removeEventListener('visibilitychange', _launchVis);
       _launchVis = null;
 
-      /* Wait a beat for app to open, then show success */
       setTimeout(() => {
         NM.show({
           type:      'success',
@@ -1162,7 +1399,6 @@ function launchGame(platform) {
   _launchVis = onVisChange;
   document.addEventListener('visibilitychange', _launchVis);
 
-  /* ─── Fail timer — 3 s, no visibility change → not installed ─── */
   _launchFail = setTimeout(() => {
     if (_launchActive) return;
     _launchActive = true;
@@ -1186,14 +1422,8 @@ function launchGame(platform) {
     setTimeout(() => window.open(store, '_blank'), 1200);
   }, 3000);
 
-  /* ─── Attempt to open app (after modal shows) ─── */
   setTimeout(() => {
     if (isAndroid) {
-      /*
-       * Android Intent URL format — Chrome resolves to the installed app.
-       * Package: com.dena.a12026418  (Garena Free Fire Global)
-       * Fallback: Play Store (handled by S.browser_fallback_url param)
-       */
       const intentUrl =
         'intent://freefire/#Intent;' +
         'scheme=garenaff;' +
@@ -1204,12 +1434,6 @@ function launchGame(platform) {
       window.location.href = intentUrl;
 
     } else {
-      /*
-       * iOS URL Scheme: garenaff://
-       * App Store ID: 1300146617
-       * Trick: hidden iframe so the page doesn't navigate away
-       * (Safari allows scheme launch from iframe src)
-       */
       const iframe = document.createElement('iframe');
       iframe.style.cssText = 'display:none;width:0;height:0;border:none;position:absolute;';
       iframe.src = 'garenaff://';
@@ -1236,6 +1460,183 @@ document.addEventListener('click', function(e) {
   document.body.appendChild(r);
   setTimeout(() => { if (document.body.contains(r)) document.body.removeChild(r); }, 600);
 });
+
+/* ════════════════════════════════════════════════════════
+   AUTH MODAL LOGIC
+════════════════════════════════════════════════════════ */
+
+/* Biến lưu link key free (được load từ Firebase) */
+window._freeKeyLink = '#';
+
+function showAuthModal(errMsg) {
+  const overlay = document.getElementById('authOverlay');
+  const modal   = document.getElementById('authModal');
+  overlay.classList.remove('hidden');
+  /* Trigger drop animation */
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      modal.classList.add('drop');
+    });
+  });
+
+  if (errMsg) {
+    const err    = document.getElementById('authError');
+    const errTxt = document.getElementById('authErrorTxt');
+    errTxt.textContent = errMsg;
+    err.classList.add('show');
+  }
+
+  /* Khóa scroll của trang */
+  document.body.style.overflow = 'hidden';
+}
+
+function unlockApp() {
+  const overlay = document.getElementById('authOverlay');
+  const modal   = document.getElementById('authModal');
+  modal.classList.remove('drop');
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+    document.body.style.overflow = '';
+  }, 500);
+}
+
+function toggleKeyVisible() {
+  const input = document.getElementById('keyInput');
+  const icon  = document.getElementById('eyeIcon');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.className = 'fa-solid fa-eye-slash';
+  } else {
+    input.type = 'password';
+    icon.className = 'fa-solid fa-eye';
+  }
+}
+
+async function doLogin() {
+  const key    = document.getElementById('keyInput').value.trim();
+  const btn    = document.getElementById('loginBtn');
+  const err    = document.getElementById('authError');
+  const errTxt = document.getElementById('authErrorTxt');
+  const input  = document.getElementById('keyInput');
+
+  /* Reset */
+  err.classList.remove('show');
+  input.classList.remove('error');
+
+  if (!key) {
+    errTxt.textContent = 'Vui lòng nhập key!';
+    err.classList.add('show');
+    input.classList.add('error');
+    input.focus();
+    return;
+  }
+
+  /* Firebase chưa sẵn sàng */
+  if (!window._fbDb || !window._fbRef || !window._fbGet) {
+    errTxt.textContent = 'Chưa kết nối Firebase. Thử lại!';
+    err.classList.add('show');
+    return;
+  }
+
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  try {
+    const keyId  = btoa(key).replace(/[^a-zA-Z0-9]/g, '_');
+    const snap   = await window._fbGet(window._fbRef(window._fbDb, 'keys/' + keyId));
+
+    if (!snap.exists()) {
+      throw new Error('KEY_NOT_FOUND');
+    }
+
+    const data = snap.val();
+    const now  = Date.now();
+
+    if (data.locked) {
+      throw new Error('KEY_LOCKED');
+    }
+
+    if (data.expiry && data.expiry < now) {
+      throw new Error('KEY_EXPIRED');
+    }
+
+    /* Thành công — lưu key */
+    localStorage.setItem('ff_key', key);
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    unlockApp();
+
+    NM.show({
+      type:      'success',
+      titleText: '✓ Đăng nhập thành công!',
+      subText:   'Key hợp lệ. Chào mừng bạn!',
+      showDots:  false,
+      autoHide:  3000,
+    });
+
+  } catch(e) {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    input.classList.add('error');
+
+    let msg = 'Key không hợp lệ!';
+    if (e.message === 'KEY_LOCKED')   msg = 'Key đã bị khoá bởi admin!';
+    if (e.message === 'KEY_EXPIRED')  msg = 'Key đã hết hạn!';
+    if (e.message === 'KEY_NOT_FOUND') msg = 'Key không tồn tại!';
+
+    errTxt.textContent = msg;
+    err.classList.add('show');
+    input.focus();
+  }
+}
+
+/* Enter key to login */
+document.getElementById('keyInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+/* Copy free key link */
+function copyFreeKeyLink() {
+  const link    = window._freeKeyLink || '#';
+  const copyBtn = document.getElementById('copyIcon');
+  const icon    = document.getElementById('copyIconFA');
+  const sub     = document.getElementById('freeKeySubTxt');
+
+  if (link === '#') {
+    sub.textContent = 'Chưa có link, thử lại sau!';
+    return;
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(link).then(() => {
+      copyBtn.classList.add('copied');
+      icon.className = 'fa-solid fa-check';
+      sub.textContent = 'Đã sao chép! Mở trình duyệt dán link.';
+      setTimeout(() => {
+        copyBtn.classList.remove('copied');
+        icon.className = 'fa-solid fa-copy';
+        sub.textContent = 'Nhấn để sao chép link lấy key';
+      }, 2500);
+    });
+  } else {
+    /* Fallback */
+    const ta = document.createElement('textarea');
+    ta.value = link;
+    ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    copyBtn.classList.add('copied');
+    icon.className = 'fa-solid fa-check';
+    sub.textContent = 'Đã sao chép!';
+    setTimeout(() => {
+      copyBtn.classList.remove('copied');
+      icon.className = 'fa-solid fa-copy';
+      sub.textContent = 'Nhấn để sao chép link lấy key';
+    }, 2500);
+  }
+}
 </script>
 </body>
 </html>
