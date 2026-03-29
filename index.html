@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --white: #ffffff;
+      --bg: #f0f4ff;
+      --card: #ffffff;
+      --blue:  #1565c0;
+      --blue2: #1976d2;
+      --blue3: #2196f3;
+      --blue4: #42a5f5;
+      --blue5: #90caf9;
+      --blight: #e3f2fd;
+      --bmid:   #bbdefb;
+      --red:    #c62828;
+      --red2:   #e53935;
+      --red3:   #ef5350;
+      --green:  #2e7d32;
+      --green2: #43a047;
+      --text:   #0d1b3e;
+      --text2:  #2a3a5c;
+      --text3:  #5a6a8a;
+      --border: #d8e4f8;
+      --border2:#b3cef5;
+      --sh1: 0 2px 16px rgba(21,101,192,.09);
+      --sh2: 0 6px 32px rgba(21,101,192,.15);
+      --sh3: 0 12px 48px rgba(21,101,192,.22);
+      --shr: 0 8px 36px rgba(198,40,40,.28);
+      --shg: 0 4px 20px rgba(46,125,50,.2);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background: var(--bg);
+      font-family: 'Nunito', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS BG ── */
+    #bgCanvas {
+      position:fixed; top:0; left:0;
+      width:100%; height:100%;
+      pointer-events:none; z-index:0; opacity:.5;
+    }
+
+    /* ── ORBS ── */
+    .orb {
+      position:fixed; border-radius:50%;
+      filter:blur(60px); pointer-events:none; z-index:0;
+      animation: orbFloat ease-in-out infinite;
+    }
+    .orb1{width:300px;height:300px;background:rgba(33,150,243,.12);top:-80px;right:-80px;animation-duration:8s;}
+    .orb2{width:220px;height:220px;background:rgba(21,101,192,.09);bottom:10%;left:-60px;animation-duration:11s;animation-delay:-3s;}
+    .orb3{width:180px;height:180px;background:rgba(198,40,40,.07);top:40%;right:-40px;animation-duration:9s;animation-delay:-5s;}
+    .orb4{width:150px;height:150px;background:rgba(66,165,245,.08);top:60%;left:10%;animation-duration:13s;animation-delay:-7s;}
+    @keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-28px) scale(1.05);}}
+
+    /* ── CONTAINER ── */
+    .container{position:relative;z-index:1;max-width:450px;margin:0 auto;padding-bottom:44px;}
+
+    /* ════════════════════════════════
+       HEADER
+    ════════════════════════════════ */
+    .header{
+      position:relative;overflow:hidden;
+      background:linear-gradient(145deg,#7f0000 0%,#c62828 35%,#e53935 65%,#ff6b6b 100%);
+      border-radius:0 0 40px 40px;
+      padding:50px 24px 42px;
+      box-shadow:var(--shr);
+    }
+    .hc{position:absolute;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none;}
+    .hc1{width:260px;height:260px;top:-100px;left:-80px;animation:hcAnim 6s ease-in-out infinite;}
+    .hc2{width:180px;height:180px;top:-60px;right:-40px;animation:hcAnim 8s ease-in-out infinite reverse;}
+    .hc3{width:120px;height:120px;bottom:-40px;left:30%;animation:hcAnim 7s ease-in-out infinite 1s;}
+    @keyframes hcAnim{0%,100%{transform:scale(1) translate(0,0);}33%{transform:scale(1.1) translate(10px,-8px);}66%{transform:scale(.95) translate(-6px,5px);}}
+
+    .hsparkle-dot{
+      position:absolute;width:3px;height:3px;border-radius:50%;
+      background:rgba(255,255,255,.75);
+      animation:sparkPop ease-in-out infinite;
+    }
+    @keyframes sparkPop{0%,100%{transform:scale(0);opacity:0;}50%{transform:scale(1.8);opacity:1;}}
+
+    .header-inner{position:relative;z-index:2;display:flex;align-items:center;gap:16px;}
+
+    .h-logo-wrap{position:relative;flex-shrink:0;}
+    .h-logo-outer{
+      width:82px;height:82px;border-radius:50%;
+      background:rgba(255,255,255,.15);
+      display:flex;align-items:center;justify-content:center;
+      animation:logoPulse 3s ease-in-out infinite;
+    }
+    @keyframes logoPulse{
+      0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.3),0 0 0 6px rgba(255,255,255,.1);}
+      50%{box-shadow:0 0 0 8px rgba(255,255,255,.15),0 0 0 16px rgba(255,255,255,.05);}
+    }
+    .h-logo-inner{
+      width:70px;height:70px;border-radius:50%;
+      border:2.5px solid rgba(255,255,255,.5);
+      overflow:hidden;background:rgba(255,255,255,.1);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .h-logo-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .h-logo-fb{font-size:1.8rem;color:#fff;}
+    .h-live{
+      position:absolute;bottom:2px;right:2px;
+      width:18px;height:18px;border-radius:50%;
+      background:#00e676;border:2px solid #fff;
+      box-shadow:0 0 8px #00e676;
+      animation:livePop 1.5s ease-in-out infinite;
+    }
+    @keyframes livePop{0%,100%{box-shadow:0 0 4px #00e676;transform:scale(1);}50%{box-shadow:0 0 14px #00e676;transform:scale(1.15);}}
+
+    .h-texts{flex:1;}
+    .h-label{font-size:.7rem;font-weight:700;color:rgba(255,255,255,.65);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;}
+    .h-title{font-family:'Poppins',sans-serif;font-size:1.6rem;font-weight:900;color:#fff;letter-spacing:1px;line-height:1.1;text-shadow:0 2px 16px rgba(0,0,0,.25);}
+    .h-title span{color:rgba(255,255,255,.75);font-weight:500;font-size:1rem;display:block;margin-top:2px;letter-spacing:2px;font-family:'Nunito',sans-serif;}
+    .h-chips{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+    .h-chip{
+      display:inline-flex;align-items:center;gap:4px;
+      background:rgba(255,255,255,.15);backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.25);border-radius:20px;
+      padding:3px 10px;font-size:.68rem;font-weight:700;color:#fff;letter-spacing:.5px;
+    }
+    .h-wave{position:absolute;bottom:0;left:0;right:0;z-index:3;line-height:0;}
+    .h-wave svg{width:100%;height:22px;display:block;}
+
+    /* ════════════════════════════════
+       SECTION HEAD
+    ════════════════════════════════ */
+    .sec-head{padding:26px 20px 14px;display:flex;align-items:center;gap:10px;}
+    .sec-icon{
+      width:34px;height:34px;border-radius:10px;
+      background:linear-gradient(135deg,var(--blue2),var(--blue3));
+      display:flex;align-items:center;justify-content:center;
+      font-size:.85rem;color:#fff;
+      box-shadow:0 4px 14px rgba(25,118,210,.3);flex-shrink:0;
+    }
+    .sec-title-text{font-family:'Poppins',sans-serif;font-size:.85rem;font-weight:700;color:var(--text2);letter-spacing:1px;text-transform:uppercase;flex:1;}
+    .sec-count{background:var(--blight);color:var(--blue2);border-radius:10px;padding:2px 10px;font-size:.72rem;font-weight:800;}
+
+    /* ════════════════════════════════
+       SENSITIVITY CARDS
+    ════════════════════════════════ */
+    .sens-list{padding:0 16px;}
+    .sens-card{
+      background:var(--card);border-radius:20px;
+      border:1.5px solid var(--border);
+      padding:15px 16px 13px;margin-bottom:10px;
+      box-shadow:var(--sh1);
+      transition:all .25s cubic-bezier(.34,1.56,.64,1);
+      position:relative;overflow:hidden;
+    }
+    .sens-card::before{
+      content:'';position:absolute;top:0;left:0;
+      width:4px;height:100%;border-radius:20px 0 0 20px;
+      background:linear-gradient(180deg,var(--blue3),var(--blue));
+      opacity:0;transition:opacity .2s;
+    }
+    .sens-card:hover::before{opacity:1;}
+    .sens-card:hover{border-color:var(--bmid);box-shadow:var(--sh2);transform:translateY(-2px) scale(1.005);}
+    .sens-card:last-child{margin-bottom:0;}
+    .sens-card::after{
+      content:'';position:absolute;top:0;left:-100%;
+      width:60%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(33,150,243,.04),transparent);
+      animation:cShimmer 4s infinite;
+    }
+    @keyframes cShimmer{0%{left:-100%;}100%{left:200%;}}
+
+    .sc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
+    .sc-label{display:flex;align-items:center;gap:10px;font-size:.92rem;font-weight:700;color:var(--text2);}
+    .sc-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+    .si-blue  {background:#e3f2fd;color:#1565c0;}
+    .si-red   {background:#ffebee;color:#c62828;}
+    .si-teal  {background:#e0f2f1;color:#00695c;}
+    .si-amber {background:#fff8e1;color:#e65100;}
+    .si-purple{background:#f3e5f5;color:#6a1b9a;}
+    .si-indigo{background:#e8eaf6;color:#283593;}
+
+    .sc-right{display:flex;align-items:center;gap:8px;}
+    .sc-val{
+      font-family:'Poppins',sans-serif;font-size:1.2rem;font-weight:900;
+      color:var(--blue2);min-width:44px;text-align:right;transition:color .2s;
+    }
+    .sc-val.pop{animation:valPop .35s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes valPop{0%{transform:scale(1);}45%{transform:scale(1.4);color:var(--red2);}100%{transform:scale(1);}}
+    .sc-dot{width:8px;height:8px;border-radius:50%;background:var(--blue4);box-shadow:0 0 0 2px var(--blight);transition:background .2s;}
+
+    /* Slider */
+    .slider-wrap{position:relative;}
+    .slider-track{position:relative;height:8px;background:var(--blight);border-radius:20px;overflow:visible;}
+    .slider-fill{
+      position:absolute;top:0;left:0;height:100%;border-radius:20px;
+      background:linear-gradient(90deg,var(--blue),var(--blue3),var(--blue4));
+      box-shadow:0 0 10px rgba(33,150,243,.3);
+      transition:width .06s linear;pointer-events:none;
+    }
+    input[type=range]{
+      -webkit-appearance:none;width:100%;height:8px;
+      background:transparent;position:absolute;top:0;left:0;cursor:pointer;outline:none;
+    }
+    input[type=range]::-webkit-slider-thumb{
+      -webkit-appearance:none;width:24px;height:24px;border-radius:50%;
+      background:radial-gradient(circle at 35% 30%,#fff,#e3f2fd 50%,var(--bmid));
+      border:3px solid var(--blue2);
+      box-shadow:0 2px 12px rgba(21,101,192,.4),0 1px 3px rgba(0,0,0,.12);
+      cursor:pointer;transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s;
+      margin-top:-8px;
+    }
+    input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25);box-shadow:0 2px 20px rgba(21,101,192,.55),0 0 0 4px rgba(33,150,243,.15);}
+    input[type=range]::-webkit-slider-runnable-track{background:transparent;height:8px;border-radius:20px;}
+    input[type=range]:focus{outline:none;}
+
+    .slider-ticks{display:flex;justify-content:space-between;padding:4px 2px 0;}
+    .slider-tick{font-size:.58rem;color:var(--text3);font-weight:600;}
+
+    /* ════════════════════════════════
+       APPLY CONFIG BUTTON
+    ════════════════════════════════ */
+    .apply-outer{padding:16px 16px 4px;}
+    .btn-apply-config{
+      width:100%;padding:16px 20px;border-radius:18px;
+      border:2.5px solid transparent;
+      background:linear-gradient(#fff,#fff) padding-box,
+                  linear-gradient(135deg,var(--blue),var(--blue3),#64b5f6,var(--blue)) border-box;
+      background-size:200% 200%;
+      color:var(--blue2);
+      font-family:'Poppins',sans-serif;font-size:.98rem;font-weight:800;letter-spacing:1.5px;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+      box-shadow:var(--sh2),inset 0 1px 0 rgba(33,150,243,.08);
+      transition:all .3s;position:relative;overflow:hidden;
+      animation:borderAnim 4s linear infinite;
+    }
+    @keyframes borderAnim{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+    .btn-apply-config::before{content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;background:linear-gradient(90deg,transparent,rgba(33,150,243,.1),transparent);animation:bShine 2.5s infinite;}
+    @keyframes bShine{0%{left:-100%;}100%{left:200%;}}
+    .btn-apply-config:hover{background:linear-gradient(135deg,var(--blue),var(--blue2)) padding-box,linear-gradient(135deg,var(--blue),var(--blue3)) border-box;color:#fff;transform:translateY(-3px);box-shadow:var(--sh3);}
+    .btn-apply-config:active{transform:scale(.97) translateY(0);}
+    .btn-iw{width:32px;height:32px;border-radius:10px;background:var(--blight);display:flex;align-items:center;justify-content:center;transition:background .25s;}
+    .btn-apply-config:hover .btn-iw{background:rgba(255,255,255,.2);}
+
+    /* ════════════════════════════════
+       DIVIDER
+    ════════════════════════════════ */
+    .divider{height:1px;margin:6px 20px 0;background:linear-gradient(90deg,transparent,var(--border2),transparent);}
+
+    /* ════════════════════════════════
+       BUTTON SIZE CARD
+    ════════════════════════════════ */
+    .bsize-outer{padding:0 16px;}
+    .bsize-card{background:var(--card);border-radius:22px;border:1.5px solid var(--border);box-shadow:var(--sh1);overflow:hidden;position:relative;}
+    .bsize-hd{
+      background:linear-gradient(135deg,#e8f4ff,#f0f8ff);
+      padding:16px 18px;display:flex;align-items:center;gap:14px;
+      border-bottom:1px solid var(--border);position:relative;overflow:hidden;
+    }
+    .bsize-hd::after{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(33,150,243,.08);}
+    .bsize-logo{
+      width:68px;height:68px;border-radius:50%;
+      border:3px solid var(--blue3);
+      box-shadow:0 0 0 4px var(--blight),var(--sh2);
+      overflow:hidden;background:var(--white);flex-shrink:0;
+      position:relative;z-index:1;
+      animation:logoRot 8s ease-in-out infinite;
+    }
+    @keyframes logoRot{0%,85%,100%{transform:rotate(0);}5%{transform:rotate(5deg);}10%{transform:rotate(-5deg);}15%,80%{transform:rotate(0);}}
+    .bsize-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .bsize-logo-fb{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--blue2);font-size:1.8rem;}
+    .bsize-info{flex:1;z-index:1;}
+    .bsize-info-title{font-family:'Poppins',sans-serif;font-size:1rem;font-weight:800;color:var(--text);}
+    .bsize-info-sub{font-size:.78rem;color:var(--text3);margin-top:3px;}
+    .bsize-info-badge{display:inline-flex;align-items:center;gap:4px;background:var(--blight);color:var(--blue2);border-radius:10px;padding:2px 9px;font-size:.68rem;font-weight:700;margin-top:5px;}
+
+    .bsize-sliders{padding:16px 18px 8px;}
+    .srow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+    .srow:last-child{margin-bottom:0;}
+    .srow-icon{width:30px;height:30px;border-radius:9px;background:var(--blight);display:flex;align-items:center;justify-content:center;color:var(--blue2);font-size:.78rem;flex-shrink:0;}
+    .srow-label{font-size:.82rem;font-weight:700;color:var(--text2);min-width:46px;}
+    .srow-slider{flex:1;position:relative;}
+    .srow-val{font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:800;color:var(--blue2);min-width:36px;text-align:right;}
+
+    .bsize-apply-outer{padding:8px 18px 18px;}
+    .btn-bsize-apply{
+      width:100%;padding:13px;border-radius:14px;border:none;
+      background:linear-gradient(135deg,var(--blue),var(--blue2),var(--blue3));
+      background-size:200% 200%;animation:borderAnim 3s linear infinite;
+      color:#fff;font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:1px;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+      box-shadow:0 4px 20px rgba(21,101,192,.32);transition:all .25s;
+      position:relative;overflow:hidden;
+    }
+    .btn-bsize-apply::before{content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);animation:bShine 2s infinite;}
+    .btn-bsize-apply:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(21,101,192,.45);}
+    .btn-bsize-apply:active{transform:scale(.97);}
+
+    /* ════════════════════════════════
+       LAUNCH SECTION
+    ════════════════════════════════ */
+    .launch-outer{padding:0 16px;}
+    .launch-row{
+      background:var(--card);border-radius:20px;
+      border:1.5px solid var(--border);box-shadow:var(--sh1);
+      padding:16px;margin-bottom:10px;
+      display:flex;align-items:center;gap:14px;
+      position:relative;overflow:hidden;transition:all .25s;
+    }
+    .launch-row:hover{border-color:var(--bmid);box-shadow:var(--sh2);transform:translateY(-2px);}
+    .launch-row::after{content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;background:linear-gradient(90deg,transparent,rgba(33,150,243,.04),transparent);animation:cShimmer 5s infinite;}
+
+    .lr-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;position:relative;}
+    .lr-android{background:linear-gradient(135deg,#b9fbc0,#a8e6cf);color:#1b5e20;box-shadow:0 4px 16px rgba(27,94,32,.18);}
+    .lr-ios    {background:linear-gradient(135deg,#d0d7ff,#c8d2ff);color:#1a237e;box-shadow:0 4px 16px rgba(26,35,126,.18);}
+    .lr-badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;border:2px solid var(--white);font-size:.45rem;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;}
+    .lrb-and{background:#00c853;}
+    .lrb-ios{background:#2979ff;}
+
+    .lr-info{flex:1;}
+    .lr-name{font-family:'Poppins',sans-serif;font-size:1rem;font-weight:800;color:var(--text);}
+    .lr-sub{font-size:.75rem;color:var(--text3);margin-top:1px;}
+    .lr-status{display:flex;align-items:center;gap:5px;font-size:.68rem;font-weight:700;margin-top:4px;}
+    .lr-dot{width:6px;height:6px;border-radius:50%;animation:sDot 1.8s ease-in-out infinite;}
+    @keyframes sDot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
+    .lrd-and{background:#00c853;box-shadow:0 0 6px #00c853;}
+    .lrd-ios{background:#2979ff;box-shadow:0 0 6px #2979ff;}
+    .lrs-and{color:#1b5e20;}
+    .lrs-ios{color:#1a237e;}
+
+    .btn-launch{
+      padding:10px 18px;border-radius:13px;border:none;
+      font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.5px;
+      cursor:pointer;display:flex;align-items:center;gap:6px;
+      transition:all .22s cubic-bezier(.34,1.56,.64,1);
+      position:relative;overflow:hidden;white-space:nowrap;
+    }
+    .btn-launch::before{content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);animation:bShine 2s infinite;}
+    .bl-and{background:linear-gradient(135deg,#1565c0,#1976d2,#2196f3);color:#fff;box-shadow:0 4px 16px rgba(21,101,192,.38);}
+    .bl-ios{background:linear-gradient(135deg,#283593,#3949ab,#5c6bc0);color:#fff;box-shadow:0 4px 16px rgba(40,53,147,.38);}
+    .btn-launch:hover{transform:translateY(-3px) scale(1.05);}
+    .btn-launch:active{transform:scale(.95);}
+
+    .btn-launch-main{
+      width:100%;padding:17px 20px;border-radius:20px;border:none;
+      background:linear-gradient(135deg,#0d47a1,#1565c0,#1976d2,#2196f3,#42a5f5);
+      background-size:300% 300%;animation:borderAnim 4s ease infinite;
+      color:#fff;font-family:'Poppins',sans-serif;font-size:1.05rem;font-weight:900;letter-spacing:1.5px;
+      cursor:pointer;margin-top:4px;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      box-shadow:0 8px 32px rgba(13,71,161,.38),0 2px 8px rgba(13,71,161,.2);
+      transition:all .3s;position:relative;overflow:hidden;
+    }
+    .btn-launch-main::before{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:bShine 2s infinite;}
+    .btn-launch-main::after{content:'';position:absolute;inset:2px;border-radius:18px;border:1px solid rgba(255,255,255,.15);pointer-events:none;}
+    .btn-launch-main:hover{transform:translateY(-4px);box-shadow:0 14px 44px rgba(13,71,161,.5),0 4px 12px rgba(13,71,161,.3);}
+    .btn-launch-main:active{transform:scale(.97);}
+    .rktico{font-size:1.1rem;animation:rkBounce 1.5s ease-in-out infinite;}
+    @keyframes rkBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+
+    /* ════════════════════════════════
+       NOTIFICATION MODAL  ← FIXED
+    ════════════════════════════════ */
+    #notifModal{
+      position:fixed;top:14px;left:50%;
+      transform:translateX(-50%) translateY(calc(-100% - 20px));
+      z-index:99999;width:calc(100% - 28px);max-width:390px;
+      background:var(--white);border-radius:22px;
+      box-shadow:0 12px 50px rgba(0,0,0,.15),0 2px 8px rgba(0,0,0,.06);
+      border:1.5px solid var(--border);overflow:hidden;
+      /* transition only transform+opacity, NOT width */
+      transition:transform .42s cubic-bezier(.34,1.4,.64,1), opacity .3s;
+      opacity:0;pointer-events:none;
+    }
+    #notifModal.show{
+      transform:translateX(-50%) translateY(0);
+      opacity:1;pointer-events:auto;
+    }
+
+    /* Top progress bar — NO transition by default, JS controls it */
+    #nmBar{
+      height:4px;width:0%;
+      border-radius:22px 22px 0 0;
+      /* Transition set/cleared by JS so reflow is guaranteed */
+    }
+    .nmb-blue {background:linear-gradient(90deg,var(--blue),var(--blue3),#90caf9);}
+    .nmb-green{background:linear-gradient(90deg,#2e7d32,#43a047,#81c784);}
+    .nmb-red  {background:linear-gradient(90deg,#b71c1c,#e53935,#ef9a9a);}
+
+    .nm-body{display:flex;align-items:center;gap:14px;padding:14px 16px 15px;}
+
+    .nm-ic{
+      width:46px;height:46px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.15rem;flex-shrink:0;position:relative;
+    }
+    .nm-ic.loading{background:linear-gradient(135deg,#e3f2fd,#bbdefb);color:var(--blue2);}
+    .nm-ic.success{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);color:var(--green);}
+    .nm-ic.error  {background:linear-gradient(135deg,#ffebee,#ffcdd2);color:var(--red2);}
+    .nm-ic.warning{background:linear-gradient(135deg,#fff8e1,#ffecb3);color:#e65100;}
+
+    .nm-ring{
+      position:absolute;inset:-3px;border-radius:50%;
+      border:2px solid transparent;border-top-color:currentColor;
+      animation:nmSpin .9s linear infinite;
+    }
+    @keyframes nmSpin{to{transform:rotate(360deg);}}
+    .nm-ring.gone{display:none;}
+
+    .nm-spin{animation:nmSpin .9s linear infinite;}
+    .nm-pop{animation:nmPop .45s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes nmPop{0%{transform:scale(0);}100%{transform:scale(1);}}
+
+    .nm-texts{flex:1;min-width:0;}
+    .nm-title{font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .nm-sub{font-size:.76rem;color:var(--text3);margin-top:2px;line-height:1.35;}
+
+    /* Animated dots — always in DOM, shown/hidden via display */
+    .nm-dots{display:flex;gap:4px;margin-top:6px;}
+    .nm-dot{width:5px;height:5px;border-radius:50%;background:var(--blue3);animation:dotAnim 1.2s ease-in-out infinite;}
+    .nm-dot:nth-child(2){animation-delay:.2s;}
+    .nm-dot:nth-child(3){animation-delay:.4s;}
+    @keyframes dotAnim{0%,80%,100%{transform:scale(.5);opacity:.3;}40%{transform:scale(1);opacity:1;}}
+
+    .nm-close{
+      width:28px;height:28px;border-radius:50%;background:var(--bg);border:none;
+      display:flex;align-items:center;justify-content:center;cursor:pointer;
+      color:var(--text3);font-size:.75rem;flex-shrink:0;transition:background .2s,color .2s;
+    }
+    .nm-close:hover{background:var(--border);color:var(--text);}
+
+    /* ════════════════════════════════
+       FOOTER
+    ════════════════════════════════ */
+    .footer-card{
+      margin:14px 16px 0;background:var(--card);
+      border-radius:18px;border:1.5px solid var(--border);
+      padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh1);
+    }
+    .fc-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#e8f4ff,var(--blight));display:flex;align-items:center;justify-content:center;color:var(--blue2);font-size:1rem;flex-shrink:0;}
+    .fc-texts{flex:1;}
+    .fc-title{font-size:.85rem;font-weight:700;color:var(--text2);}
+    .fc-sub{font-size:.72rem;color:var(--text3);margin-top:1px;}
+    .fc-tag{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);color:var(--green);border-radius:10px;padding:3px 10px;font-size:.7rem;font-weight:800;}
+
+    .version-row{text-align:center;padding:16px 0 0;font-size:.68rem;color:var(--text3);letter-spacing:1px;font-weight:600;}
+
+    /* ════════════════════════════════
+       RIPPLE
+    ════════════════════════════════ */
+    @keyframes rippleFX{to{transform:translate(-50%,-50%) scale(30);opacity:0;}}
+
+    /* ════════════════════════════════
+       SCROLLBAR
+    ════════════════════════════════ */
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--bmid);border-radius:10px;}
+  </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="orb orb4"></div>
+
+<!-- ══════════════════════════════════
+     NOTIFICATION MODAL  (fixed DOM)
+══════════════════════════════════ -->
+<div id="notifModal" role="alert" aria-live="assertive">
+  <!-- progress bar — no inline transition, JS controls -->
+  <div id="nmBar"></div>
+  <div class="nm-body">
+    <!-- icon circle -->
+    <div class="nm-ic loading" id="nmIc">
+      <div class="nm-ring" id="nmRing"></div>
+      <i class="fa-solid fa-gear nm-spin" id="nmIcon"></i>
+    </div>
+    <!-- texts -->
+    <div class="nm-texts">
+      <div class="nm-title" id="nmTitle">Đang xử lý...</div>
+      <div class="nm-sub"  id="nmSub">Vui lòng chờ</div>
+      <!-- dots: always in DOM, just show/hide -->
+      <div class="nm-dots" id="nmDots">
+        <div class="nm-dot"></div>
+        <div class="nm-dot"></div>
+        <div class="nm-dot"></div>
+      </div>
+    </div>
+    <!-- close -->
+    <button class="nm-close" onclick="NM.close()" aria-label="Đóng">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     APP
+══════════════════════════════════ -->
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="hc hc1"></div>
+    <div class="hc hc2"></div>
+    <div class="hc hc3"></div>
+    <div id="hSparkle"></div>
+
+    <div class="header-inner">
+      <div class="h-logo-wrap">
+        <div class="h-logo-outer">
+          <div class="h-logo-inner">
+            <img src="bullet-logo.png" alt="FF"
+              onerror="this.outerHTML='<div class=\'h-logo-fb\'><i class=\'fa-solid fa-crosshairs\'></i></div>'" />
+          </div>
+        </div>
+        <div class="h-live" title="Active"></div>
+      </div>
+      <div class="h-texts">
+        <div class="h-label"><i class="fa-solid fa-bolt" style="margin-right:4px;"></i>SENSITIVITY CONFIG</div>
+        <div class="h-title">
+          FF SENSI HVH
+          <span><i class="fa-solid fa-crosshairs" style="margin-right:5px;"></i>FREE FIRE</span>
+        </div>
+        <div class="h-chips">
+          <span class="h-chip"><i class="fa-solid fa-fire" style="margin-right:3px;"></i>MAX SENSI</span>
+          <span class="h-chip"><i class="fa-solid fa-shield-halved" style="margin-right:3px;"></i>VERIFIED</span>
+          <span class="h-chip"><i class="fa-solid fa-star" style="margin-right:3px;"></i>PRO</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="h-wave">
+      <svg viewBox="0 0 450 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,22 C60,4 120,18 180,10 C240,2 300,20 360,10 C390,5 420,16 450,8 L450,22 Z" fill="#f0f4ff"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- SENSITIVITY SETTINGS -->
+  <div class="sec-head">
+    <div class="sec-icon"><i class="fa-solid fa-sliders"></i></div>
+    <div class="sec-title-text">Sensitivity Settings</div>
+    <div class="sec-count">LIces</div>
+  </div>
+
+  <div class="sens-list">
+
+    <!-- General -->
+    <div class="sens-card">
+      <div class="sc-top">
+        <div class="sc-label">
+          <div class="sc-icon si-blue"><i class="fa-solid fa-person-running"></i></div>
+          General
+        </div>
+        <div class="sc-right">
+          <div class="sc-dot"></div>
+          <div class="sc-val" id="val-general">190</div>
+        </div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-general" style="width:95%"></div>
+          <input type="range" min="1" max="200" value="190"
+            oninput="updateSlider(this,'general',1,200)"
+            onchange="updateSlider(this,'general',1,200)" />
+        </div>
+        <div class="slider-ticks"><span class="slider-tick">1</span><span class="slider-tick">50</span><span class="slider-tick">100</span><span class="slider-tick">150</span><span class="slider-tick">200</span></div>
+      </div>
+    </div>
+
+    <!-- Red Dot Scope -->
+    <div class="sens-card">
+      <div class="sc-top">
+        <div class="sc-label">
+          <div class="sc-icon si-red"><i class="fa-solid fa-circle-dot"></i></div>
+          Red Dot Scope
+        </div>
+        <div class="sc-right">
+          <div class="sc-dot" style="background:#ef5350;box-shadow:0 0 0 2px #ffebee;"></div>
+          <div class="sc-val" id="val-reddot">183</div>
+        </div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-reddot" style="width:91.5%"></div>
+          <input type="range" min="1" max="200" value="183"
+            oninput="updateSlider(this,'reddot',1,200)"
+            onchange="updateSlider(this,'reddot',1,200)" />
+        </div>
+        <div class="slider-ticks"><span class="slider-tick">1</span><span class="slider-tick">50</span><span class="slider-tick">100</span><span class="slider-tick">150</span><span class="slider-tick">200</span></div>
+      </div>
+    </div>
+
+    <!-- 2x Scope -->
+    <div class="sens-card">
+      <div class="sc-top">
+        <div class="sc-label">
+          <div class="sc-icon si-teal"><i class="fa-solid fa-binoculars"></i></div>
+          2x Scope
+        </div>
+        <div class="sc-right">
+          <div class="sc-dot" style="background:#00897b;box-shadow:0 0 0 2px #e0f2f1;"></div>
+          <div class="sc-val" id="val-2x">179</div>
+        </div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-2x" style="width:89.5%"></div>
+          <input type="range" min="1" max="200" value="179"
+            oninput="updateSlider(this,'2x',1,200)"
+            onchange="updateSlider(this,'2x',1,200)" />
+        </div>
+        <div class="slider-ticks"><span class="slider-tick">1</span><span class="slider-tick">50</span><span class="slider-tick">100</span><span class="slider-tick">150</span><span class="slider-tick">200</span></div>
+      </div>
+    </div>
+
+    <!-- 4x Scope -->
+    <div class="sens-card">
+      <div class="sc-top">
+        <div class="sc-label">
+          <div class="sc-icon si-amber"><i class="fa-solid fa-expand"></i></div>
+          4x Scope
+        </div>
+        <div class="sc-right">
+          <div class="sc-dot" style="background:#fb8c00;box-shadow:0 0 0 2px #fff8e1;"></div>
+          <div class="sc-val" id="val-4x">171</div>
+        </div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-4x" style="width:85.5%"></div>
+          <input type="range" min="1" max="200" value="171"
+            oninput="updateSlider(this,'4x',1,200)"
+            onchange="updateSlider(this,'4x',1,200)" />
+        </div>
+        <div class="slider-ticks"><span class="slider-tick">1</span><span class="slider-tick">50</span><span class="slider-tick">100</span><span class="slider-tick">150</span><span class="slider-tick">200</span></div>
+      </div>
+    </div>
+
+    <!-- Sniper Scope -->
+    <div class="sens-card">
+      <div class="sc-top">
+        <div class="sc-label">
+          <div class="sc-icon si-purple"><i class="fa-solid fa-crosshairs"></i></div>
+          Sniper Scope
+        </div>
+        <div class="sc-right">
+          <div class="sc-dot" style="background:#8e24aa;box-shadow:0 0 0 2px #f3e5f5;"></div>
+          <div class="sc-val" id="val-sniper">56</div>
+        </div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-sniper" style="width:28%"></div>
+          <input type="range" min="1" max="200" value="56"
+            oninput="updateSlider(this,'sniper',1,200)"
+            onchange="updateSlider(this,'sniper',1,200)" />
+        </div>
+        <div class="slider-ticks"><span class="slider-tick">1</span><span class="slider-tick">50</span><span class="slider-tick">100</span><span class="slider-tick">150</span><span class="slider-tick">200</span></div>
+      </div>
+    </div>
+
+    <!-- 360° Camera -->
+    <div class="sens-card">
+      <div class="sc-top">
+        <div class="sc-label">
+          <div class="sc-icon si-indigo"><i class="fa-solid fa-camera-rotate"></i></div>
+          360° Camera
+        </div>
+        <div class="sc-right">
+          <div class="sc-dot" style="background:#3949ab;box-shadow:0 0 0 2px #e8eaf6;"></div>
+          <div class="sc-val" id="val-cam">40</div>
+        </div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-cam" style="width:20%"></div>
+          <input type="range" min="1" max="200" value="40"
+            oninput="updateSlider(this,'cam',1,200)"
+            onchange="updateSlider(this,'cam',1,200)" />
+        </div>
+        <div class="slider-ticks"><span class="slider-tick">1</span><span class="slider-tick">50</span><span class="slider-tick">100</span><span class="slider-tick">150</span><span class="slider-tick">200</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Apply Config -->
+  <div class="apply-outer">
+    <button class="btn-apply-config" onclick="applyConfig()">
+      <div class="btn-iw"><i class="fa-solid fa-certificate"></i></div>
+      APPLY CONFIG
+      <i class="fa-solid fa-certificate" style="margin-left:auto;font-size:.8rem;opacity:.6;"></i>
+    </button>
+  </div>
+
+  <div class="divider" style="margin-top:22px;"></div>
+
+  <!-- BUTTON SIZE -->
+  <div class="sec-head">
+    <div class="sec-icon"><i class="fa-solid fa-certificate"></i></div>
+    <div class="sec-title-text">Size Nút Bắn</div>
+  </div>
+
+  <div class="bsize-outer">
+    <div class="bsize-card">
+      <div class="bsize-hd">
+        <div class="bsize-logo">
+          <img src="https://sf-static.upanhlaylink.com/img/image_20260329bbb30e1323ebd6a5ad38d4ae161f5b7b.jpg" alt="Logo"
+            onerror="this.parentElement.innerHTML='<div class=\'bsize-logo-fb\'><i class=\'fa-solid fa-crosshairs\'></i></div>'" />
+        </div>
+        <div class="bsize-info">
+          <div class="bsize-info-title"><i class="fa-solid fa-skull" style="color:var(--blue2);margin-right:7px;"></i>Game Buttons</div>
+          <div class="bsize-info-sub">Tích Hợp Nút Bắn Trong Game </div>
+          <div class="bsize-info-badge"><i class="fa-solid fa-sliders"></i> Responsive Config</div>
+        </div>
+      </div>
+
+      <div class="bsize-sliders">
+        <div class="srow">
+          <div class="srow-icon"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+          <div class="srow-label">Width</div>
+          <div class="srow-slider">
+            <div class="slider-track" style="position:relative;">
+              <div class="slider-fill" id="fill-btnw" style="width:46.7%"></div>
+              <input type="range" min="50" max="200" value="120"
+                oninput="updateSlider(this,'btnw',50,200)"
+                onchange="updateSlider(this,'btnw',50,200)" />
+            </div>
+          </div>
+          <div class="srow-val" id="val-btnw">120</div>
+        </div>
+        <div class="srow">
+          <div class="srow-icon"><i class="fa-solid fa-arrows-up-down"></i></div>
+          <div class="srow-label">Height</div>
+          <div class="srow-slider">
+            <div class="slider-track" style="position:relative;">
+              <div class="slider-fill" id="fill-btnh" style="width:46.7%"></div>
+              <input type="range" min="50" max="200" value="120"
+                oninput="updateSlider(this,'btnh',50,200)"
+                onchange="updateSlider(this,'btnh',50,200)" />
+            </div>
+          </div>
+          <div class="srow-val" id="val-btnh">120</div>
+        </div>
+        <div class="srow">
+          <div class="srow-icon"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+          <div class="srow-label">Scale</div>
+          <div class="srow-slider">
+            <div class="slider-track" style="position:relative;">
+              <div class="slider-fill" id="fill-scale" style="width:50%"></div>
+              <input type="range" min="50" max="150" value="100"
+                oninput="updateSlider(this,'scale',50,150)"
+                onchange="updateSlider(this,'scale',50,150)" />
+            </div>
+          </div>
+          <div class="srow-val" id="val-scale">100</div>
+        </div>
+      </div>
+
+      <div class="bsize-apply-outer">
+        <button class="btn-bsize-apply" onclick="applyButtonSize()">
+          <i class="fa-solid fa-rocket"></i>
+          APPLY SIZE
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider" style="margin:22px 20px 0;"></div>
+
+  <!-- LAUNCH FREE FIRE -->
+  <div class="sec-head">
+    <div class="sec-icon"><i class="fa-solid fa-rocket"></i></div>
+    <div class="sec-title-text">Lauch Free Fire</div>
+  </div>
+
+  <div class="launch-outer">
+
+    <!-- Android -->
+    <div class="launch-row">
+      <div class="lr-icon lr-android">
+        <i class="fa-brands fa-android"></i>
+        <div class="lr-badge lrb-and"><i class="fa-solid fa-check" style="font-size:.4rem;"></i></div>
+      </div>
+      <div class="lr-info">
+        <div class="lr-name">Android</div>
+        <div class="lr-sub">Free Fire&nbsp;|&nbsp; Open Game</div>
+        <div class="lr-status lrs-and">
+          <div class="lr-dot lrd-and"></div>
+          Cnot
+        </div>
+      </div>
+      <button class="btn-launch bl-and" onclick="launchGame('android')">
+        <i class="fa-brands fa-android"></i>OPEN
+      </button>
+    </div>
+
+    <!-- iOS -->
+    <div class="launch-row">
+      <div class="lr-icon lr-ios">
+        <i class="fa-brands fa-apple"></i>
+        <div class="lr-badge lrb-ios"><i class="fa-solid fa-check" style="font-size:.4rem;"></i></div>
+      </div>
+      <div class="lr-info">
+        <div class="lr-name">iOS / iPadOS</div>
+        <div class="lr-sub">Free Fire &nbsp;|&nbsp; Open</div>
+        <div class="lr-status lrs-ios">
+          <div class="lr-dot lrd-ios"></div>
+         Success
+        </div>
+      </div>
+      <button class="btn-launch bl-ios" onclick="launchGame('ios')">
+        <i class="fa-brands fa-apple"></i>OPEN
+      </button>
+    </div>
+
+    <!-- Auto detect big button -->
+    <button class="btn-launch-main" onclick="launchGame('auto')">
+      <i class="fa-solid fa-rocket rktico"></i>
+     OPEN FREE FIRE
+      <i class="fa-solid fa-chevron-right" style="font-size:.85rem;margin-left:auto;opacity:.7;"></i>
+    </button>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-card">
+    <div class="fc-icon"><i class="fa-solid fa-shield-halved"></i></div>
+    <div class="fc-texts">
+      <div class="fc-title">FF Sensi Pro — Antiband </div>
+      <div class="fc-sub">Cấu hình an toàn, không ảnh hưởng tài khoản</div>
+      <div class="fc-sub">Hà Văn Huấn Perium / Zalo : 0325575642</div>
+    </div>
+    <div class="fc-tag"><i class="fa-solid fa-check" style="margin-right:3px;"></i>SAFE</div>
+  </div>
+
+  <div class="version-row">
+    <i class="fa-solid fa-circle-check" style="color:var(--blue3);margin-right:4px;"></i>
+    FF SENSI PRO v1.0.0 &nbsp;•&nbsp; © Hà Văn Huấn
+  </div>
+
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   CANVAS BACKGROUND — animated dot network
+════════════════════════════════════════════════════════ */
+(function() {
+  const cv = document.getElementById('bgCanvas');
+  const cx = cv.getContext('2d');
+  let W, H, pts;
+
+  function resize() {
+    W = cv.width  = window.innerWidth;
+    H = cv.height = window.innerHeight;
+    pts = Array.from({ length: 28 }, () => ({
+      x:  Math.random() * W,
+      y:  Math.random() * H,
+      vx: (Math.random() - .5) * .4,
+      vy: (Math.random() - .5) * .4,
+      r:  Math.random() * 3 + 1.5,
+    }));
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw() {
+    cx.clearRect(0, 0, W, H);
+    cx.fillStyle = 'rgba(33,150,243,.35)';
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      cx.beginPath();
+      cx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      cx.fill();
+    });
+    cx.lineWidth = 1;
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const dx = pts[i].x - pts[j].x;
+        const dy = pts[i].y - pts[j].y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < 130) {
+          cx.strokeStyle = `rgba(25,118,210,${.08 * (1 - d / 130)})`;
+          cx.beginPath();
+          cx.moveTo(pts[i].x, pts[i].y);
+          cx.lineTo(pts[j].x, pts[j].y);
+          cx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ════════════════════════════════════════════════════════
+   HEADER SPARKLES
+════════════════════════════════════════════════════════ */
+(function() {
+  const wrap = document.getElementById('hSparkle');
+  for (let i = 0; i < 14; i++) {
+    const d = document.createElement('div');
+    d.className = 'hsparkle-dot';
+    d.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${1.2+Math.random()*2}s;animation-delay:${-Math.random()*3}s;`;
+    wrap.appendChild(d);
+  }
+})();
+
+/* ════════════════════════════════════════════════════════
+   SLIDER
+════════════════════════════════════════════════════════ */
+function updateSlider(input, key, min, max) {
+  const val = parseInt(input.value);
+  const pct = ((val - min) / (max - min)) * 100;
+  const fill  = document.getElementById('fill-' + key);
+  const valEl = document.getElementById('val-'  + key);
+  if (fill)  fill.style.width = pct + '%';
+  if (valEl) {
+    valEl.textContent = val;
+    valEl.classList.remove('pop');
+    void valEl.offsetWidth;          /* force reflow to restart animation */
+    valEl.classList.add('pop');
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   NOTIFICATION MODAL — FULLY FIXED
+   ─────────────────────────────────────────────────────
+   Root causes fixed:
+   1. nmSub used innerHTML to inject #nmDots → duplicated IDs
+      FIX: nmSub uses textContent, dots live as sibling element
+   2. notifFlow setTimeout not tracked → old callback fires on new modal
+      FIX: NM._flowTimer cancels any pending callback before each new call
+   3. topbar transition not properly reset → bar stays 100% or mis-animates
+      FIX: remove transition → force reflow via void offsetWidth → restore
+════════════════════════════════════════════════════════ */
+const NM = (() => {
+  /* DOM refs — cached once, never replaced */
+  const modal  = document.getElementById('notifModal');
+  const bar    = document.getElementById('nmBar');
+  const ic     = document.getElementById('nmIc');
+  const ring   = document.getElementById('nmRing');
+  const icon   = document.getElementById('nmIcon');
+  const title  = document.getElementById('nmTitle');
+  const sub    = document.getElementById('nmSub');
+  const dots   = document.getElementById('nmDots');
+
+  let _hideTimer = null;   /* autoHide timeout */
+  let _flowTimer = null;   /* notifFlow delayed-success/error timeout */
+  let _barTimer  = null;   /* bar animation frame handle */
+
+  function _resetBar(colorClass) {
+    /* 1. Kill any running bar animation */
+    cancelAnimationFrame(_barTimer);
+
+    /* 2. Remove transition → instant reset to 0 */
+    bar.style.transition = 'none';
+    bar.className = colorClass;
+    bar.style.width = '0%';
+
+    /* 3. Force reflow so browser registers the 0% state */
+    void bar.offsetWidth;
+
+    /* 4. Now add transition and animate to 100% */
+    bar.style.transition = 'width 1.8s ease';
+    bar.style.width = '100%';
+  }
+
+  function show({ type, titleText, subText, showDots, autoHide }) {
+    /* Cancel any pending timers from previous calls */
+    clearTimeout(_hideTimer);
+    clearTimeout(_flowTimer);   /* ← KEY FIX: cancel old flow callback */
+
+    /* Update title & sub using textContent — NO innerHTML */
+    title.textContent = titleText || '';
+    sub.textContent   = subText   || '';
+
+    /* Dots: show/hide via display — element stays in DOM */
+    dots.style.display = showDots ? 'flex' : 'none';
+
+    /* Icon + ring + color */
+    switch (type) {
+      case 'loading':
+        ic.className   = 'nm-ic loading';
+        ring.className = 'nm-ring';          /* spinner visible */
+        icon.className = 'fa-solid fa-gear nm-spin';
+        _resetBar('nmb-blue');
+        break;
+      case 'success':
+        ic.className   = 'nm-ic success';
+        ring.className = 'nm-ring gone';     /* spinner hidden */
+        icon.className = 'fa-solid fa-circle-check nm-pop';
+        _resetBar('nmb-green');
+        break;
+      case 'error':
+        ic.className   = 'nm-ic error';
+        ring.className = 'nm-ring gone';
+        icon.className = 'fa-solid fa-circle-xmark nm-pop';
+        _resetBar('nmb-red');
+        break;
+      case 'warning':
+        ic.className   = 'nm-ic warning';
+        ring.className = 'nm-ring gone';
+        icon.className = 'fa-solid fa-triangle-exclamation nm-pop';
+        _resetBar('nmb-red');
+        break;
+    }
+
+    /* Show modal */
+    modal.classList.add('show');
+
+    /* Auto-hide */
+    if (autoHide) {
+      _hideTimer = setTimeout(NM.close, autoHide);
+    }
+  }
+
+  function close() {
+    clearTimeout(_hideTimer);
+    modal.classList.remove('show');
+    /* Instantly clear bar after hide */
+    setTimeout(() => {
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+    }, 440);
+  }
+
+  /* Loading → then success/error after delay */
+  function flow({ loadTitle, loadSub, okTitle, okSub, errTitle, errSub, delayMs }) {
+    /* Show loading immediately */
+    show({ type: 'loading', titleText: loadTitle, subText: loadSub, showDots: true });
+
+    /* Schedule success transition — store handle so it can be cancelled */
+    _flowTimer = setTimeout(() => {
+      _flowTimer = null;
+      show({ type: 'success', titleText: okTitle, subText: okSub, showDots: false, autoHide: 2800 });
+    }, delayMs || 1300);
+
+    /* Expose _flowTimer so show() can clear it on next call */
+    NM._flowTimer = _flowTimer;
+  }
+
+  /* Patch: keep _flowTimer in sync with NM object */
+  const _origFlow = flow;
+
+  return { show, close, flow: _origFlow, get _flowTimer() { return _flowTimer; }, set _flowTimer(v) { _flowTimer = v; } };
+})();
+
+/* ════════════════════════════════════════════════════════
+   APPLY CONFIG
+════════════════════════════════════════════════════════ */
+function applyConfig() {
+  const g = document.getElementById('val-general').textContent;
+  const r = document.getElementById('val-reddot').textContent;
+  const x2 = document.getElementById('val-2x').textContent;
+  const x4 = document.getElementById('val-4x').textContent;
+  const sn = document.getElementById('val-sniper').textContent;
+  const cm = document.getElementById('val-cam').textContent;
+
+  NM.flow({
+    loadTitle: 'Đang áp dụng cấu hình...',
+    loadSub:   'Ghi độ nhạy vào bộ nhớ game',
+    okTitle:   '✓ Config đã áp dụng!',
+    okSub:     `General ${g} · Red Dot ${r} · Sniper ${sn}`,
+    delayMs:   1400,
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   APPLY BUTTON SIZE
+════════════════════════════════════════════════════════ */
+function applyButtonSize() {
+  const w = document.getElementById('val-btnw').textContent;
+  const h = document.getElementById('val-btnh').textContent;
+  const s = document.getElementById('val-scale').textContent;
+
+  NM.flow({
+    loadTitle: 'Đang cập nhật kích thước...',
+    loadSub:   'Tính toán tỉ lệ nút game',
+    okTitle:   '✓ Kích thước đã lưu!',
+    okSub:     `Width ${w}px · Height ${h}px · Scale ${s}%`,
+    delayMs:   1200,
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   LAUNCH FREE FIRE
+   Android : intent:// deep link (Chrome handles it)
+   iOS     : garenaff:// URL scheme via hidden iframe
+   Detection: visibilitychange — hidden = app opened ✓
+              timeout 3s no change = not installed ✗
+════════════════════════════════════════════════════════ */
+/* Track active launch so multiple rapid clicks don't stack */
+let _launchActive = false;
+let _launchVis    = null;   /* bound visibilitychange handler */
+let _launchFail   = null;   /* fail timeout */
+
+function launchGame(platform) {
+  /* Detect OS */
+  let os = platform;
+  if (os === 'auto') {
+    const ua = navigator.userAgent || '';
+    if (/android/i.test(ua))             os = 'android';
+    else if (/iphone|ipad|ipod/i.test(ua)) os = 'ios';
+    else                                  os = 'android';
+  }
+
+  const isAndroid = os === 'android';
+  const osName    = isAndroid ? 'Android' : 'iOS';
+
+  /* Remove any previous visibilitychange listener */
+  if (_launchVis) {
+    document.removeEventListener('visibilitychange', _launchVis);
+    _launchVis = null;
+  }
+  clearTimeout(_launchFail);
+  _launchActive = false;
+
+  /* Show loading modal */
+  NM.show({
+    type:      'loading',
+    titleText: `Đang kiểm tra ${osName}...`,
+    subText:   isAndroid ? 'Kết nối qua Android Intent Deep Link' : 'Kết nối qua iOS URL Scheme',
+    showDots:  true,
+  });
+
+  /* ─── visibilitychange detection ─── */
+  function onVisChange() {
+    if (_launchActive) return;
+
+    if (document.hidden) {
+      /* Page hidden → app launched successfully */
+      _launchActive = true;
+      clearTimeout(_launchFail);
+      document.removeEventListener('visibilitychange', _launchVis);
+      _launchVis = null;
+
+      /* Wait a beat for app to open, then show success */
+      setTimeout(() => {
+        NM.show({
+          type:      'success',
+          titleText: '✓ Mở game thành công!',
+          subText:   `Free Fire đã được mở trên ${osName}`,
+          showDots:  false,
+          autoHide:  2800,
+        });
+      }, 500);
+    }
+  }
+  _launchVis = onVisChange;
+  document.addEventListener('visibilitychange', _launchVis);
+
+  /* ─── Fail timer — 3 s, no visibility change → not installed ─── */
+  _launchFail = setTimeout(() => {
+    if (_launchActive) return;
+    _launchActive = true;
+    document.removeEventListener('visibilitychange', _launchVis);
+    _launchVis = null;
+
+    const store = isAndroid
+      ? 'https://play.google.com/store/apps/details?id=com.dena.a12026418'
+      : 'https://apps.apple.com/app/free-fire/id1300146617';
+
+    NM.show({
+      type:      'error',
+      titleText: '✕ Không mở được game',
+      subText:   isAndroid
+        ? 'Free Fire chưa cài. Đang mở Google Play...'
+        : 'Free Fire chưa cài. Đang mở App Store...',
+      showDots:  false,
+      autoHide:  4500,
+    });
+
+    setTimeout(() => window.open(store, '_blank'), 1200);
+  }, 3000);
+
+  /* ─── Attempt to open app (after modal shows) ─── */
+  setTimeout(() => {
+    if (isAndroid) {
+      /*
+       * Android Intent URL format — Chrome resolves to the installed app.
+       * Package: com.dena.a12026418  (Garena Free Fire Global)
+       * Fallback: Play Store (handled by S.browser_fallback_url param)
+       */
+      const intentUrl =
+        'intent://freefire/#Intent;' +
+        'scheme=garenaff;' +
+        'package=com.dena.a12026418;' +
+        'S.browser_fallback_url=' +
+        encodeURIComponent('https://play.google.com/store/apps/details?id=com.dena.a12026418') +
+        ';end';
+      window.location.href = intentUrl;
+
+    } else {
+      /*
+       * iOS URL Scheme: garenaff://
+       * App Store ID: 1300146617
+       * Trick: hidden iframe so the page doesn't navigate away
+       * (Safari allows scheme launch from iframe src)
+       */
+      const iframe = document.createElement('iframe');
+      iframe.style.cssText = 'display:none;width:0;height:0;border:none;position:absolute;';
+      iframe.src = 'garenaff://';
+      document.body.appendChild(iframe);
+      setTimeout(() => {
+        if (document.body.contains(iframe)) document.body.removeChild(iframe);
+      }, 3500);
+    }
+  }, 650);
+}
+
+/* ════════════════════════════════════════════════════════
+   CLICK RIPPLE
+════════════════════════════════════════════════════════ */
+document.addEventListener('click', function(e) {
+  if (e.target.closest('input[type=range]')) return;
+  const r = document.createElement('div');
+  r.style.cssText =
+    `position:fixed;left:${e.clientX}px;top:${e.clientY}px;` +
+    `width:6px;height:6px;background:rgba(33,150,243,.28);border-radius:50%;` +
+    `pointer-events:none;z-index:88888;` +
+    `transform:translate(-50%,-50%) scale(0);` +
+    `animation:rippleFX .55s ease-out forwards;`;
+  document.body.appendChild(r);
+  setTimeout(() => { if (document.body.contains(r)) document.body.removeChild(r); }, 600);
+});
+</script>
+</body>
+</html>
